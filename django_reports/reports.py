@@ -2,6 +2,7 @@ import json
 
 from abc import abstractmethod, ABCMeta
 from django.core import serializers
+from django.http.response import HttpResponse
 from django.views.generic.base import View
 
 from django_reports.models import Report
@@ -9,8 +10,8 @@ from django_reports.models import Report
 
 class ReportQuery:
     """
-    Abstract class that must be overridden for every report. Each report must implement ``eval`` and ``get_from``. 
-    ``eval`` must provide the input for highcharts as python dictionary. ``get_from`` must provide the name and 
+    Abstract class that must be overridden for every report. Each report must implement ``eval`` and ``get_form``. 
+    ``eval`` must provide the input for highcharts as python dictionary. ``get_form`` must provide the name and 
     configurations for each parameter including the choices
     """
 
@@ -22,7 +23,7 @@ class ReportQuery:
 
     def _eval(self, **kwargs):
         objects = self.eval(**kwargs)
-        return serializers.serialize('json',objects)
+        return objects
 
     @abstractmethod
     def get_form(self, **kwargs):
@@ -30,8 +31,13 @@ class ReportQuery:
 
     def _get_form(self, **kwargs):
         objects = self.get_form(**kwargs)
-        return serializers.serialize('json',objects)
+        return objects
 
+    def render_to_json_response(self, obj, **response_kwargs):
+        global data
+        data = json.dumps(obj)
+        response_kwargs['content_type'] = 'application/json'
+        return HttpResponse(data, **response_kwargs)
 
 class ReportView(View):
 
@@ -41,8 +47,14 @@ class ReportView(View):
             report.compile()
             params = json.loads(request.GET["parameters"]) if "parameters" in request.GET else dict()
             if request.GET["get"] == "form":
-                return report.get_form(**params)
+                return self.render_to_json_response(report.get_form(**params))
             elif request.GET["get"] == "values":
-                return report.eval(**params)
+                return self.render_to_json_response(report.eval(**params))
         else:
-            return serializers.serialize('json', Report.objects.all().values('name', flat=True))
+            return self.render_to_json_response([x["name"] for x in Report.objects.all().values('name')])
+
+    def render_to_json_response(self, obj, **response_kwargs):
+        global data
+        data = json.dumps(obj)
+        response_kwargs['content_type'] = 'application/json'
+        return HttpResponse(data, **response_kwargs)
