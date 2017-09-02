@@ -44,9 +44,9 @@ class PieChartReportQuery(ReportQuery):
                 }
             },
             "series": [{
-                "name": self.get_series_name(),
+                "name": self.get_series_name(**kwargs),
                 "colorByPoint": True,
-                "data": self.get_series_data()
+                "data": self.get_series_data(**kwargs)
             }]
 
         }
@@ -120,7 +120,7 @@ class BarChartReportQuery(ReportQuery):
                     }
                 }
             },
-            "series": self.get_series()
+            "series": self.get_series(**kwargs)
 
 
         }

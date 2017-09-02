@@ -2,6 +2,7 @@ import json
 
 from abc import abstractmethod, ABCMeta
 from django.core import serializers
+from django.db import models
 from django.http.response import HttpResponse
 from django.views.generic.base import View
 
@@ -33,11 +34,6 @@ class ReportQuery:
         objects = self.get_form(**kwargs)
         return objects
 
-    def render_to_json_response(self, obj, **response_kwargs):
-        global data
-        data = json.dumps(obj)
-        response_kwargs['content_type'] = 'application/json'
-        return HttpResponse(data, **response_kwargs)
 
 class ReportView(View):
 
@@ -47,14 +43,29 @@ class ReportView(View):
             report.compile()
             params = json.loads(request.GET["parameters"]) if "parameters" in request.GET else dict()
             if request.GET["get"] == "form":
-                return self.render_to_json_response(report.get_form(**params))
+                return render_to_json_response(report.get_form(**params))
             elif request.GET["get"] == "values":
-                return self.render_to_json_response(report.eval(**params))
+                return render_to_json_response(report.eval(**params))
         else:
-            return self.render_to_json_response([x["name"] for x in Report.objects.all().values('name')])
+            return render_to_json_response(
+                [
+                    {
+                        "name":r.name,
+                        "title":r.title,
+                        "style":r.style,
+                        "description":r.description
+                    }
+                    for r in
+                    Report.objects.all()
+                ]
+            )
 
-    def render_to_json_response(self, obj, **response_kwargs):
-        global data
+
+def render_to_json_response(obj, **response_kwargs):
+    global data
+    if isinstance(obj, models.QuerySet):
+        data = serializers.serialize('json', obj)
+    else:
         data = json.dumps(obj)
-        response_kwargs['content_type'] = 'application/json'
-        return HttpResponse(data, **response_kwargs)
+    response_kwargs['content_type'] = 'application/json'
+    return HttpResponse(data, **response_kwargs)
