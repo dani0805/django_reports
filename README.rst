@@ -79,7 +79,7 @@ indentifier that you can then use to select the appropriate data. You also need 
     array of data points of the values
 
 :get_series_names(self, \*\*kwargs): takes any number of keyword parameters and returns
-    and returns an array of strings
+    an array of strings
 
 :get_x_labels(self, \*\*kwargs): takes any number of keyword parameters and returns an array of strings
 
@@ -89,6 +89,14 @@ indentifier that you can then use to select the appropriate data. You also need 
 :get_form(self, \*\*kwargs): takes any number of keyword parameters and returns and returns
     an array of dictionaries that define the filter form for the report. The specific
     format depends on the form standard.
+
+Optionally you can also implement ``get_series_stack`` to use grouped style or multiple stacks
+
+:get_series_stack(self, series, \*\*kwargs): takes the series name any number of keyword parameters and returns
+    an the name of the stack that this series should use. series with the same stack name will be stacked and
+    series with different series names will be shown side by side. So to implement a grouped style barchart you
+    can implement this method and return ``series``. Not implementing this method will result in a stacked chart
+
 
 ::
 

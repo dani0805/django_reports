@@ -68,6 +68,9 @@ class BarChartReportQuery(ReportQuery):
     def get_series_data(self, series, **kwargs):
         return [1.0, 2.1, 1.5, 0.4]
 
+    def get_series_stack(self, series, **kwargs):
+        return None
+
     @abstractmethod
     def get_x_labels(self, **kwargs):
         return ["May", "June", "July", "August"]
@@ -106,7 +109,8 @@ class BarChartReportQuery(ReportQuery):
             },
             "legend": {
                 "align": "right",
-                "x": -30,
+                "x": 0,
+                "width": 400,
                 "verticalAlign": "top",
                 "y": 25,
                 "floating": True,
@@ -130,10 +134,16 @@ class BarChartReportQuery(ReportQuery):
                 }
             },
             "series":
-            [{
-                "name": s,
-                "colorByPoint": True,
-                "data": self.get_series_data(s, **kwargs)
-            } for s in self.get_series_names(**kwargs)]
+            [
+                {
+                    k: i for k, i in {
+                        "name": s,
+                        "data": self.get_series_data(s, **kwargs),
+                        "stack": self.get_series_stack(s, **kwargs)
+                    }.items()
+                    if i is not None  # add stack to dictionary only if specified
+                }
+                for s in self.get_series_names(**kwargs)
+            ]
 
         }
