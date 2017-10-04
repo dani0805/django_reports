@@ -31,7 +31,7 @@ class PieChartReportQuery(ReportQuery):
                 "text": self.get_title(**kwargs)
             },
             "tooltip": {
-                "pointFormat": "{series.name}: <b>{point.y:.1f}%</b>"
+                "pointFormat": "{series.name}: <b>{point.y}</b>"
             },
             "plotOptions": {
                 "pie": {
@@ -39,7 +39,7 @@ class PieChartReportQuery(ReportQuery):
                     "cursor": 'pointer',
                     "dataLabels": {
                         "enabled": True,
-                        "format": "<b>{point.name}</b>: {point.y:.1f} %",
+                        "format": "<b>{point.name}</b>: {point.y}",
                         "style": {
                             "color": "black"
                         }

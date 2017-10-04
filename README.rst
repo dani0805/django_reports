@@ -20,12 +20,11 @@ The class ``PieChartReportQuery`` specify 4 abstract methods that need to be imp
     array of data points of the format ``[{"name": "<label>", "y": <value>}``
 
 :get_series_name(self, \*\*kwargs): takes any number of keyword parameters and returns
-    and returns a string
+    a string
 
-:get_title(self, \*\*kwargs): takes any number of keyword parameters and returns and
-    returns a string
+:get_title(self, \*\*kwargs): takes any number of keyword parameters and returns a string
 
-:get_form(self, \*\*kwargs): takes any number of keyword parameters and returns and returns
+:get_form(self, \*\*kwargs): takes any number of keyword parameters and returns 
     an array of dictionaries that define the filter form for the report. The specific
     format depends on the form standard.
 
@@ -71,8 +70,8 @@ Grouped and Stacked Bar Charts
 ++++++++++++++++++++++++++++++
 
 ``BarChartReportQuery`` implements both stacked and group bar charts. The interfaces is slightly
-more complex then for pie charts as this charts support multiple series. The data method requirer therefore an
-indentifier that you can then use to select the appropriate data. You also need to provide
+more complex than for pie charts as this charts support multiple series. The data method requires therefore an
+identifier that you can then use to select the appropriate data. You also need to provide
 ``x`` labels and series names. These are the methods that you need to implement:
 
 :get_series_data(self, series, \*\*kwargs): takes the series name and any number of keyword parameters and returns an
@@ -83,17 +82,16 @@ indentifier that you can then use to select the appropriate data. You also need 
 
 :get_x_labels(self, \*\*kwargs): takes any number of keyword parameters and returns an array of strings
 
-:get_title(self, \*\*kwargs): takes any number of keyword parameters and returns and
-    returns a string
+:get_title(self, \*\*kwargs): takes any number of keyword parameters and returns a string
 
-:get_form(self, \*\*kwargs): takes any number of keyword parameters and returns and returns
-    an array of dictionaries that define the filter form for the report. The specific
+:get_form(self, \*\*kwargs): takes any number of keyword parameters and returns an array 
+    of dictionaries that define the filter form for the report. The specific
     format depends on the form standard.
 
 Optionally you can also implement ``get_series_stack`` to use grouped style or multiple stacks
 
-:get_series_stack(self, series, \*\*kwargs): takes the series name any number of keyword parameters and returns
-    an the name of the stack that this series should use. series with the same stack name will be stacked and
+:get_series_stack(self, series, \*\*kwargs): takes the series name and any number of keyword parameters and returns
+    the name of the stack that this series should use. series with the same stack name will be stacked and
     series with different series names will be shown side by side. So to implement a grouped style barchart you
     can implement this method and return ``series``. Not implementing this method will result in a stacked chart
 
