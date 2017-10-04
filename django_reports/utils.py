@@ -22,7 +22,7 @@ def importCode(code,name,add_to_sys_modules=0):
 
     mod = imp.new_module(name)
 
-    exec code in mod.__dict__
+    exec(code, mod.__dict__)
     if add_to_sys_modules:
         sys.modules[name] = mod
 
