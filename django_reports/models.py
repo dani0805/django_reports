@@ -5,10 +5,10 @@ from django_reports.utils import importCode
 
 
 class Report(models.Model):
-    name = models.CharField(max_length=10, unique=True, verbose_name=ugettext_lazy("Name"))
+    name = models.CharField(max_length=50, unique=True, verbose_name=ugettext_lazy("Name"))
     title = models.CharField(max_length=100, verbose_name=ugettext_lazy("Name"))
     description = models.CharField(max_length=500, verbose_name=ugettext_lazy("Name"))
-    source_code = models.CharField(max_length=4000, verbose_name=ugettext_lazy("Source Code"))
+    source_code = models.TextField(max_length=60000, verbose_name=ugettext_lazy("Source Code"))
     style = models.CharField(max_length=10, verbose_name=ugettext_lazy("Name"))
 
     def __init__(self, *args, **kwargs):
